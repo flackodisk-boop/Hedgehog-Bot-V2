@@ -15,22 +15,77 @@ module.exports = {
 	},
 
 	onStart: async function ({ message, args, api, event }) {
+
 		const permission = ["61561648169981"];
+
 		if (!permission.includes(event.senderID)) {
-			return api.sendMessage(" You don't have permission to use this command. 🐤", event.threadID, event.messageID);
+			return api.sendMessage(
+`࿇ ══━━✥👑✥━━══ ࿇
+   ⚜️ ACCÈS REFUSÉ ⚜️
+࿇ ══━━✥👑✥━━══ ࿇
+
+💥 Tu n’es pas autorisé à utiliser cette commande.
+🔐 Seul le ROI peut accéder à ce pouvoir.
+
+࿇ ══━━✥👑✥━━══ ࿇`,
+				event.threadID,
+				event.messageID
+			);
 		}
 
 		const fileName = args[0];
+
 		if (!fileName) {
-			return api.sendMessage("Please provide a file name.", event.threadID, event.messageID);
+			return api.sendMessage(
+`࿇ ══━━✥👑✥━━══ ࿇
+   ⚜️ COMMANDE INCOMPLÈTE ⚜️
+࿇ ══━━✥👑✥━━══ ࿇
+
+📂 Donne le nom du fichier à invoquer.
+💡 Exemple : .file help
+
+࿇ ══━━✥👑✥━━══ ࿇`,
+				event.threadID,
+				event.messageID
+			);
 		}
 
 		const filePath = __dirname + `/${fileName}.js`;
+
 		if (!fs.existsSync(filePath)) {
-			return api.sendMessage(`File not found: ${fileName}.js`, event.threadID, event.messageID);
+			return api.sendMessage(
+`࿇ ══━━✥👑✥━━══ ࿇
+   ⚜️ FICHIER INTROUVABLE ⚜️
+࿇ ══━━✥👑✥━━══ ࿇
+
+❌ Le fichier "${fileName}.js" n’existe pas.
+📁 Vérifie le nom et réessaie.
+
+࿇ ══━━✥👑✥━━══ ࿇`,
+				event.threadID,
+				event.messageID
+			);
 		}
 
 		const fileContent = fs.readFileSync(filePath, 'utf8');
-		api.sendMessage({ body: fileContent }, event.threadID);
+
+		return api.sendMessage(
+{
+	body:
+`࿇ ══━━✥👑✥━━══ ࿇
+      ⚜️ ARCHIVES DU ROI ⚜️
+࿇ ══━━✥👑✥━━══ ࿇
+
+📜 Fichier : ${fileName}.js
+✨ Transmission du savoir royal...
+
+࿇ ══━━✥👑✥━━══ ࿇
+
+${fileContent}
+
+࿇ ══━━✥👑✥━━══ ࿇`,
+},
+			event.threadID
+		);
 	}
 };

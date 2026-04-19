@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const CREATOR_ID = "ID_CELESTIN_OLUA"; // Remplacer par le vrai userID
+const CREATOR_ID = "ID_CELESTIN_OLUA";
 const memory = {};
 const moods = {};
 const moodList = ["fun", "cool", "froid", "sarcastique", "énergique"];
@@ -11,7 +11,9 @@ function normalizeText(text) {
 }
 
 function frameMessage(content) {
-  return `✧═════•❁❀❁•═════✧\n${content}\n✧═════•❁❀❁•═════✧`;
+  return `࿇ ══━━✥🌸✥━━══ ࿇
+${content}
+࿇ ══━━✥🌸✥━━══ ࿇`;
 }
 
 module.exports = {
@@ -26,7 +28,7 @@ module.exports = {
   },
 
   onStart: async function({ message }) {
-    await message.reply(frameMessage("⚡ Flash V3 est prêt ! Tapez 'flash [message]' pour parler ou 'flash imagine [prompt]' pour créer une image !"));
+    await message.reply(frameMessage("⚡ Système Flash V3 initialisé.\nInteraction activée.\n\n💬 flash [message]\n🖼️ flash imagine [idée]"));
   },
 
   onChat: async function({ event, message, usersData }) {
@@ -36,34 +38,29 @@ module.exports = {
     if (!userMsg) return;
 
     const text = normalizeText(userMsg);
-
-    // Répond uniquement si : créateur OU message commence par "flash"
     if (userID !== CREATOR_ID && !text.startsWith("flash")) return;
 
     const args = userMsg.split(" ");
     const command = args[1]?.toLowerCase();
 
-    // 🔹 Clear mémoire
     if (command === "clear" && userID === CREATOR_ID) {
       memory[userID] = "";
-      return message.reply(frameMessage("🧹 Mémoire reset !"));
+      return message.reply(frameMessage("🧹 Mémoire effacée."));
     }
 
-    // 🔹 Génération d'image
     if (command === "imagine" && userID === CREATOR_ID) {
       const promptImg = args.slice(2).join(" ");
-      if (!promptImg) return message.reply(frameMessage("❌ Exemple : flash imagine un dragon sur une moto 🚀"));
+      if (!promptImg) return message.reply(frameMessage("⚠️ Donne une idée."));
       try {
         const res = await axios.get(`https://arychauhann.onrender.com/api/gemini-proxy2?prompt=${encodeURIComponent(promptImg)}`);
         const imgUrl = res.data.image || res.data.url || null;
-        if (!imgUrl) return message.reply(frameMessage("❌ L'API n'a pas renvoyé d'image"));
-        return message.reply(frameMessage(`🖼️ Voici ton image :\n${imgUrl}`));
+        if (!imgUrl) return message.reply(frameMessage("❌ Aucune image générée."));
+        return message.reply(frameMessage(`🖼️ Image :\n${imgUrl}`));
       } catch {
-        return message.reply(frameMessage("❌ Erreur API image 😢"));
+        return message.reply(frameMessage("❌ Erreur API."));
       }
     }
 
-    // 🔹 Gestion de l'humeur
     const now = Date.now();
     if (!moods[userID]) {
       moods[userID] = moodList[Math.floor(Math.random() * moodList.length)];
@@ -73,29 +70,29 @@ module.exports = {
       moods[userID] = moodList[Math.floor(Math.random() * moodList.length)];
       lastMoodChange[userID] = now;
     }
-    const mood = moods[userID];
 
-    // 🔹 Chat intelligent
+    const mood = moods[userID];
     const userPrompt = args.slice(1).join(" ");
     const memoryText = memory[userID] || "";
 
     const prompt = `
-Tu es bachira V3 🤖, IA ultra-rapide et intelligente.
-🎭 Humeur : ${mood}
-👑 Créateur : Célestin Olua
-🧠 Mémoire précédente : ${memoryText}
-👤 Utilisateur : ${userName}
-💬 Message : ${userPrompt}
-Règles : répond de façon intelligente, créative, vivante, drôle, utilise des emojis, adapte ton ton selon ton humeur.
+Tu es Flash V3 ⚡ IA avancée.
+Mode : ${mood}
+Créateur : Célestin Olua
+Mémoire : ${memoryText}
+Utilisateur : ${userName}
+Message : ${userPrompt}
+
+Réponds avec style, intelligence et fluidité.
 `;
 
     try {
       const res = await axios.get(`https://arychauhann.onrender.com/api/gemini-proxy2?prompt=${encodeURIComponent(prompt)}`);
-      const reply = res.data.reply || res.data.result || "❌ Flash V3 ne comprend pas 😢";
+      const reply = res.data.reply || res.data.result || "⚠️ Erreur.";
       memory[userID] = reply;
       return message.reply(frameMessage(reply));
     } catch {
-      return message.reply(frameMessage("❌ Flash V3 bug 😢"));
+      return message.reply(frameMessage("❌ Système indisponible."));
     }
   }
 };

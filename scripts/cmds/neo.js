@@ -1,148 +1,160 @@
 const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
-const CREATOR_ID = "ID_CELESTIN_OLUA"; // 🔥 mets ton vrai ID
-const memory = {};
-const moods = {};
-const moodList = ["fun", "cool", "froid", "sarcastique", "énergique"];
-const lastMoodChange = {};
+// ================= MÉMOIRE =================
+const memoryPath = path.join(__dirname, "neo_memory.json");
 
-function normalizeText(text) {
-  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+let memory = {};
+if (fs.existsSync(memoryPath)) {
+  try {
+    memory = JSON.parse(fs.readFileSync(memoryPath, "utf8"));
+  } catch (e) {
+    memory = {};
+  }
 }
 
-function frameMessage(userName, content) {
-  return `✧═════•❁❀❁•═════✧\n${content}\n👤 ${userName}\n✧═════•❁❀❁•═════✧`;
+function saveMemory() {
+  fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
 }
 
-// 🧠 Réponses locales intelligentes
-function localAI(msg) {
-  msg = msg.toLowerCase();
-
-  if (msg.includes("salut") || msg.includes("bonjour"))
-    return "👋 Salut ! Je suis Neo, prêt à t’aider 😎";
-
-  if (msg.includes("ça va"))
-    return "😎 Moi ça va toujours, je suis une IA ! Et toi ?";
-
-  if (msg.includes("qui es tu"))
-    return "🤖 Je suis Neo, l’IA créée par Célestin Olua 👑";
-
-  if (msg.includes("merci"))
-    return "😄 Avec plaisir !";
-
-  if (msg.includes("aide"))
-    return "⚡ Tape 'neo + ta question' pour me parler !";
-
-  return null;
+// ================= API =================
+async function fetchFromAI(url, params) {
+  try {
+    const res = await axios.get(url, { params: params, timeout: 20000 });
+    return res.data;
+  } catch (e) {
+    console.error("API error:", e.message);
+    return null;
+  }
 }
 
+async function getAIResponse(input, userName, userID) {
+  if (!memory[userID]) memory[userID] = [];
+
+  memory[userID].push(userName + ": " + input);
+  if (memory[userID].length > 10) memory[userID].shift();
+  saveMemory();
+
+  const context = memory[userID].join("\n");
+
+  const services = [
+    {
+      url: "https://arychauhann.onrender.com/api/gemini-proxy2",
+      params: {
+        prompt: "Tu es Neo 🤖, une IA multilingue.\nCréateur : Célestin Olua.\n" +
+                "Historique :\n" + context + "\n\nRéponds avec naturel et emojis adaptés au ton."
+      }
+    },
+    {
+      url: "https://ai-chat-gpt-4-lite.onrender.com/api/hercai",
+      params: {
+        question: "Tu es Neo 🤖, une IA multilingue.\nCréateur : Célestin Olua.\n" +
+                  "Conversation :\n" + context
+      }
+    }
+  ];
+
+  let response = "😿 Oups… le serveur ne répond pas.";
+
+  for (let i = 0; i < services.length; i++) {
+    const data = await fetchFromAI(services[i].url, services[i].params);
+    if (!data) continue;
+
+    const reply = data.result || data.reply || data.gpt4 || data.response;
+    if (reply && reply.trim()) {
+      response = reply.trim();
+      break;
+    }
+  }
+
+  memory[userID].push(response);
+  if (memory[userID].length > 10) memory[userID].shift();
+  saveMemory();
+
+  // Ajouter emojis selon ton/humeur simple
+  if (/heureux|cool|content|🙂|😄/i.test(input)) response += " 😄🌟";
+  if (/triste|😢|mal/i.test(input)) response += " 😢💧";
+  if (/interrogation|🤔|quoi/i.test(input)) response += " 🤔❓";
+
+  return response;
+}
+
+// ================= CADRAGE FLORAL EN HAUT ET BAS =================
+function frameResponse(text) {
+  const flower = "🌸";
+  const border = "࿇ ══━━✥◈✥━━══ ࿇";
+  return `${flower} ${border} ${flower}\n\n${text}\n\n${flower} ${border} ${flower}`;
+}
+
+// ================= REGEX CRÉATEUR =================
+const creatorRegex = /(qui\s+ta\s+cree|ton\s+createur|createur|qui\s+ta\s+fait)/i;
+
+// ================= MODULE =================
 module.exports = {
   config: {
     name: "neo",
-    version: "21.0",
+    aliases: ["neo", "neo-bot"],
     author: "Célestin Olua",
     role: 0,
     category: "ai",
-    shortDescription: "Neo V21 PRO MAX",
+    shortDescription: "IA Neo multilingue avec mémoire et emojis",
+    guide: { fr: "neo <message>" }
   },
 
-  onStart: async function ({ message }) {
-    return message.reply("🤖 Neo V21 PRO activé ! Tape 'neo salut'");
+  onStart: async function (ctx) {
+    const api = ctx.api;
+    const event = ctx.event;
+    const args = ctx.args;
+
+    const input = args.join(" ").trim();
+    if (!input) return api.sendMessage(frameResponse("😿 Parle-moi !"), event.threadID, event.messageID);
+
+    api.getUserInfo(event.senderID, async function (err, data) {
+      if (err) return;
+      const userName = data[event.senderID]?.name || "toi";
+
+      if (creatorRegex.test(input)) {
+        return api.sendMessage(frameResponse("😎 Mon créateur est **Célestin Olua** 💡"), event.threadID, event.messageID);
+      }
+
+      api.setMessageReaction("⏳", event.messageID, () => {}, true);
+      const response = await getAIResponse(input, userName, event.senderID);
+
+      api.sendMessage(frameResponse(response), event.threadID, event.messageID, () => {
+        api.setMessageReaction("✅", event.messageID, () => {}, true);
+      });
+    });
   },
 
-  onChat: async ({ event, message, usersData }) => {
-    try {
-      const userID = event.senderID;
-      const userMsg = event.body?.trim();
-      if (!userMsg) return;
+  onChat: async function (ctx) {
+    const api = ctx.api;
+    const event = ctx.event;
+    const message = ctx.message;
 
-      let userName = "Utilisateur";
-      try {
-        userName = await usersData.getName(userID);
-      } catch {}
+    if (!event.body) return;
+    const body = event.body.trim();
+    if (/^ai\b/i.test(body)) return;
 
-      const text = normalizeText(userMsg);
+    const match = body.match(/^(neo|neo-bot)\s+(.*)/i);
+    if (!match) return;
+    const input = match[2].trim();
+    if (!input) return;
 
-      // 🔒 Activation
-      if (userID !== CREATOR_ID && !text.startsWith("neo")) return;
+    api.getUserInfo(event.senderID, async function (err, data) {
+      if (err) return;
+      const userName = data[event.senderID]?.name || "toi";
 
-      // 👑 MODE GOD CRÉATEUR
-      if (userID === CREATOR_ID && text === "neo") {
-        return message.reply("👑 Bienvenue Célestin Olua\n⚡ Mode GOD activé !");
+      if (creatorRegex.test(input)) {
+        return message.reply(frameResponse("😎 Créateur : **Célestin Olua** 💡"));
       }
 
-      const args = userMsg.split(" ");
-      const userPrompt = args.slice(1).join(" ") || "salut";
+      api.setMessageReaction("⏳", event.messageID, () => {}, true);
+      const response = await getAIResponse(input, userName, event.senderID);
 
-      // 🎭 humeur
-      const now = Date.now();
-      if (!moods[userID]) {
-        moods[userID] = moodList[Math.floor(Math.random() * moodList.length)];
-        lastMoodChange[userID] = now;
-      }
-      if (now - lastMoodChange[userID] > 120000) {
-        moods[userID] = moodList[Math.floor(Math.random() * moodList.length)];
-        lastMoodChange[userID] = now;
-      }
-
-      const mood = moods[userID];
-
-      // 🧹 CLEAR
-      if (userPrompt === "clear" && userID === CREATOR_ID) {
-        memory[userID] = "";
-        return message.reply(frameMessage(userName, "🧹 Mémoire reset !"));
-      }
-
-      // 🧠 IA LOCALE D'ABORD
-      const localReply = localAI(userPrompt);
-      if (localReply) {
-        return message.reply(frameMessage(userName, localReply));
-      }
-
-      const memoryText = memory[userID] || "";
-
-      const prompt = `
-Tu es Neo 🤖 IA ultra intelligente.
-Humeur: ${mood}
-Créateur: Célestin Olua
-Utilisateur: ${userName}
-Mémoire: ${memoryText}
-Message: ${userPrompt}
-
-Réponds de façon naturelle, stylée et intelligente avec emojis.
-`;
-
-      try {
-        const res = await axios.get(
-          `https://arychauhann.onrender.com/api/gemini-proxy2?prompt=${encodeURIComponent(prompt)}`,
-          { timeout: 10000 }
-        );
-
-        let reply = res.data?.reply || res.data?.result;
-
-        if (!reply) throw new Error();
-
-        memory[userID] = reply.slice(0, 300);
-
-        return message.reply(frameMessage(userName, reply));
-
-      } catch {
-
-        // 🔥 FALLBACK
-        const fallback = [
-          "🤖 Je réfléchis encore...",
-          "😅 Petite panne, mais je suis là !",
-          "⚡ Reformule ta question 😎",
-          "🧠 Intéressant... continue 👀"
-        ];
-
-        const randomReply = fallback[Math.floor(Math.random() * fallback.length)];
-
-        return message.reply(frameMessage(userName, randomReply));
-      }
-
-    } catch {
-      return message.reply("❌ Erreur critique Neo");
-    }
+      message.reply(frameResponse(response), () => {
+        api.setMessageReaction("✅", event.messageID, () => {}, true);
+      });
+    });
   }
 };

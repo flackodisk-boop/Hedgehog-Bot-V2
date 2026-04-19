@@ -21,21 +21,43 @@ module.exports = {
 			savedCategory: "Đã lưu cài đặt sắp xếp danh sách help theo thứ tự thể loại"
 		},
 		en: {
-			savedName: "Saved sort help list by name",
-			savedCategory: "Saved sort help list by category"
+			savedName: "✔ Liste d’aide triée par nom enregistrée",
+			savedCategory: "✔ Liste d’aide triée par catégorie enregistrée"
 		}
 	},
 
 	onStart: async function ({ message, event, args, threadsData, getLang }) {
+
 		if (args[0] == "name") {
 			await threadsData.set(event.threadID, "name", "settings.sortHelp");
-			message.reply(getLang("savedName"));
+			message.reply(
+`࿇ ══━━✥🌸✥━━══ ࿇
+✔ TRI ACTIVÉ
+
+📂 Liste d’aide : tri par NOM
+🔤 Organisation : A → Z
+
+✨ Système mis à jour avec succès
+࿇ ══━━✥🌸✥━━══ ࿇`
+			);
 		}
+
 		else if (args[0] == "category") {
-			threadsData.set(event.threadID, "category", "settings.sortHelp");
-			message.reply(getLang("savedCategory"));
+			await threadsData.set(event.threadID, "category", "settings.sortHelp");
+			message.reply(
+`࿇ ══━━✥🌸✥━━══ ࿇
+✔ TRI ACTIVÉ
+
+📁 Liste d’aide : tri par CATÉGORIE
+📊 Organisation optimisée
+
+✨ Système mis à jour avec succès
+࿇ ══━━✥🌸✥━━══ ࿇`
+			);
 		}
-		else
+
+		else {
 			message.SyntaxError();
+		}
 	}
 };

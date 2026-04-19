@@ -24,26 +24,23 @@ module.exports = {
     author: "Camille 💙",
     countDown: 5,
     role: 0,
-    shortDescription: { en: "View commands list" },
-    longDescription: { en: "Show all commands and details" },
+    shortDescription: { en: "Voir les commandes" },
+    longDescription: { en: "Affiche toutes les commandes du bot" },
     category: "info",
-    guide: { en: "{pn} [command_name]" },
-    priority: 1
+    guide: { en: "{pn} [commande]" }
   },
 
   onStart: async ({ message, args, event, role }) => {
     const prefix = await getPrefix(event.threadID);
 
-    // =========================
-    // 📌 MENU PRINCIPAL
-    // =========================
+    // ======================
+    // 🌸 MENU PRINCIPAL
+    // ======================
     if (!args[0]) {
       const categories = {};
-      let msg = `࿇ ══━━✥🌸✥━━══ ࿇
-        🌸 MENU D’AIDE ROYAL
-࿇ ══━━✥🌸✥━━══ ࿇
-
-`;
+      let msg = `╭━━━━━━━━━━━━━━━━━━━━╮
+👑🌸 𝙈𝙀𝙉𝙐 𝙍𝙊𝙔𝘼𝙇 🌸👑
+╰━━━━━━━━━━━━━━━━━━━━╯\n`;
 
       for (const [name, cmd] of commands) {
         if (cmd.config.role > role) continue;
@@ -53,18 +50,26 @@ module.exports = {
       }
 
       for (const cat of Object.keys(categories).sort()) {
-        msg += `\n╔═══🌸 ${applyFont(cat.toUpperCase())} 🌸═══╗\n`;
+
+        // 🌸 CADRE ROYAL + FLEURS
+        msg += `
+┏━━━━━━━━━━━━━━━🌸👑🌸━━━━━━━━━━━━━━━┓
+┃        ✦ ${applyFont(cat.toUpperCase())} ✦
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+`;
+
         for (const name of categories[cat].sort()) {
-          msg += `┃ ✦ ${applyFont(name)}\n`;
+          msg += `┃ ❀ ${applyFont(name)}\n`;
         }
-        msg += `╚════════════════════╝\n`;
+
+        msg += `┗━━━━━━━━━━━━━━━🌸👑🌸━━━━━━━━━━━━━━━┛\n`;
       }
 
       msg += `
-࿇ ══━━✥🌸✥━━══ ࿇
+╭━━━━━━━━━━━━━━━━━━━━╮
 📊 TOTAL : ${commands.size}
 🔑 PREFIX : ${prefix}
-࿇ ══━━✥🌸✥━━══ ࿇
+╰━━━━━━━━━━━━━━━━━━━━╯
 
 💬 ${prefix}help <commande>
 `;
@@ -72,9 +77,9 @@ module.exports = {
       return message.reply(msg);
     }
 
-    // =========================
+    // ======================
     // 📌 DÉTAIL COMMANDE
-    // =========================
+    // ======================
     const commandName = args[0].toLowerCase();
     const command =
       commands.get(commandName) ||
@@ -82,19 +87,23 @@ module.exports = {
 
     if (!command) {
       return message.reply(
-`࿇ ══━━✥🌸✥━━══ ࿇
+`╭━━━━━━━━━━━━━━╮
 ❌ COMMANDE INTROUVABLE
-࿇ ══━━✥🌸✥━━══ ࿇`
+╰━━━━━━━━━━━━━━╯`
       );
     }
 
     const cfg = command.config;
-    const roleText = {0:"Tous les utilisateurs",1:"Administrateurs",2:"Bot Admin"}[cfg.role] || "Inconnu";
+
+    const roleText =
+      {0:"Tous les utilisateurs",1:"Admins",2:"Owner Bot"}[cfg.role] || "Inconnu";
+
     const usage = (cfg.guide?.en || "{pn} " + cfg.name).replace("{pn}", prefix);
 
-    const resp = `࿇ ══━━✥🌸✥━━══ ࿇
-🌸 ${applyFont(cfg.name.toUpperCase())}
-࿇ ══━━✥🌸✥━━══ ࿇
+    const resp = `
+╭━━━━━━━━━━━━━━━━━━━━╮
+👑 ${applyFont(cfg.name.toUpperCase())}
+╰━━━━━━━━━━━━━━━━━━━━╯
 
 📌 Version : ${cfg.version || "1.0"}
 👤 Auteur : ${cfg.author}
@@ -107,7 +116,9 @@ ${cfg.longDescription?.en || "Aucune description"}
 💡 Utilisation :
 ${usage}
 
-࿇ ══━━✥🌸✥━━══ ࿇`;
+╭━━━━━━━━━━━━━━━━━━━━╮
+🌸 FIN DU MENU ROYAL 🌸
+╰━━━━━━━━━━━━━━━━━━━━╯`;
 
     return message.reply(resp);
   }

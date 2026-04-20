@@ -2,159 +2,161 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-// ================= MÉMOIRE =================
-const memoryPath = path.join(__dirname, "neo_memory.json");
+// 📦 MEMORY SIMPLE
+const DB_FILE = path.join(__dirname, "neo_memory.json");
 
-let memory = {};
-if (fs.existsSync(memoryPath)) {
-  try {
-    memory = JSON.parse(fs.readFileSync(memoryPath, "utf8"));
-  } catch (e) {
-    memory = {};
+function loadDB() {
+  if (!fs.existsSync(DB_FILE)) return {};
+  return JSON.parse(fs.readFileSync(DB_FILE));
+}
+
+function saveDB(db) {
+  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+}
+
+function getMem(id) {
+  const db = loadDB();
+  if (!db[id]) {
+    db[id] = { name: null, mood: "normal", messages: 0 };
   }
+  return db[id];
 }
 
-function saveMemory() {
-  fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
+function setMem(id, data) {
+  const db = loadDB();
+  db[id] = data;
+  saveDB(db);
 }
 
-// ================= API =================
-async function fetchFromAI(url, params) {
-  try {
-    const res = await axios.get(url, { params: params, timeout: 20000 });
-    return res.data;
-  } catch (e) {
-    console.error("API error:", e.message);
-    return null;
-  }
+// 🌸 FRAME
+function frame(text) {
+  return `
+🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
+
+${text}
+
+🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
+`;
 }
 
-async function getAIResponse(input, userName, userID) {
-  if (!memory[userID]) memory[userID] = [];
+// 🧹 CLEAN OUTPUT (IMPORTANT)
+function cleanText(text) {
+  return text
+    .replace(/🎀.*?\(\s*\d+\/\d+\s*\)/gi, "")
+    .replace(/🎀\s*𝗦𝗵𝗶𝘇𝘂.*?\n?/gi, "")
+    .replace(/🤖\s*NEO\s*:/gi, "")
+    .replace(/NEO\s*:/gi, "")
+    .trim();
+}
 
-  memory[userID].push(userName + ": " + input);
-  if (memory[userID].length > 10) memory[userID].shift();
-  saveMemory();
+// 🎨 IMAGINE
+function imagine(prompt) {
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+}
 
-  const context = memory[userID].join("\n");
+// 🤖 AI CALL (Christus APIs)
+async function askAI(prompt, mood, name) {
+  const fullPrompt = `
+Tu es une IA naturelle. ton créateur Célestin olua. tu parle avec emojis mais pas trop.
+
+Ne mets aucun titre.
+Réponds comme un humain.
+
+Utilisateur: ${name || "ami"}
+Humeur: ${mood}
+
+Message:
+${prompt}
+`;
 
   const services = [
     {
-      url: "https://arychauhann.onrender.com/api/gemini-proxy2",
-      params: {
-        prompt: "Tu es Neo 🤖, une IA multilingue.\nCréateur : Célestin Olua.\n" +
-                "Historique :\n" + context + "\n\nRéponds avec naturel et emojis adaptés au ton."
-      }
-    },
-    {
-      url: "https://ai-chat-gpt-4-lite.onrender.com/api/hercai",
-      params: {
-        question: "Tu es Neo 🤖, une IA multilingue.\nCréateur : Célestin Olua.\n" +
-                  "Conversation :\n" + context
-      }
+      url: "https://shizuai.vercel.app/chat",
+      method: "post",
+      data: { uid: "neo", message: fullPrompt }
     }
   ];
 
-  let response = "😿 Oups… le serveur ne répond pas.";
+  for (let s of services) {
+    try {
+      const res = await axios({
+        method: s.method,
+        url: s.url,
+        data: s.data,
+        timeout: 20000
+      });
 
-  for (let i = 0; i < services.length; i++) {
-    const data = await fetchFromAI(services[i].url, services[i].params);
-    if (!data) continue;
-
-    const reply = data.result || data.reply || data.gpt4 || data.response;
-    if (reply && reply.trim()) {
-      response = reply.trim();
-      break;
-    }
+      return (
+        res.data?.reply ||
+        res.data?.message ||
+        res.data?.response ||
+        "..."
+      );
+    } catch {}
   }
 
-  memory[userID].push(response);
-  if (memory[userID].length > 10) memory[userID].shift();
-  saveMemory();
-
-  // Ajouter emojis selon ton/humeur simple
-  if (/heureux|cool|content|🙂|😄/i.test(input)) response += " 😄🌟";
-  if (/triste|😢|mal/i.test(input)) response += " 😢💧";
-  if (/interrogation|🤔|quoi/i.test(input)) response += " 🤔❓";
-
-  return response;
+  return "Je réfléchis doucement... 🌸";
 }
 
-// ================= CADRAGE FLORAL EN HAUT ET BAS =================
-function frameResponse(text) {
-  const flower = "🌸";
-  const border = "࿇ ══━━✥◈✥━━══ ࿇";
-  return `${flower} ${border} ${flower}\n\n${text}\n\n${flower} ${border} ${flower}`;
-}
-
-// ================= REGEX CRÉATEUR =================
-const creatorRegex = /(qui\s+ta\s+cree|ton\s+createur|createur|qui\s+ta\s+fait)/i;
-
-// ================= MODULE =================
+// 🧠 MODULE
 module.exports = {
   config: {
     name: "neo",
-    aliases: ["neo", "neo-bot"],
-    author: "Célestin Olua",
+    version: "10.0.0",
     role: 0,
-    category: "ai",
-    shortDescription: "IA Neo multilingue avec mémoire et emojis",
-    guide: { fr: "neo <message>" }
+    category: "ai"
   },
 
-  onStart: async function (ctx) {
-    const api = ctx.api;
-    const event = ctx.event;
-    const args = ctx.args;
+  onStart: async function () {},
 
-    const input = args.join(" ").trim();
-    if (!input) return api.sendMessage(frameResponse("😿 Parle-moi !"), event.threadID, event.messageID);
-
-    api.getUserInfo(event.senderID, async function (err, data) {
-      if (err) return;
-      const userName = data[event.senderID]?.name || "toi";
-
-      if (creatorRegex.test(input)) {
-        return api.sendMessage(frameResponse("😎 Mon créateur est **Célestin Olua** 💡"), event.threadID, event.messageID);
-      }
-
-      api.setMessageReaction("⏳", event.messageID, () => {}, true);
-      const response = await getAIResponse(input, userName, event.senderID);
-
-      api.sendMessage(frameResponse(response), event.threadID, event.messageID, () => {
-        api.setMessageReaction("✅", event.messageID, () => {}, true);
-      });
-    });
-  },
-
-  onChat: async function (ctx) {
-    const api = ctx.api;
-    const event = ctx.event;
-    const message = ctx.message;
-
+  onChat: async function ({ api, event, message }) {
     if (!event.body) return;
-    const body = event.body.trim();
-    if (/^ai\b/i.test(body)) return;
 
-    const match = body.match(/^(neo|neo-bot)\s+(.*)/i);
-    if (!match) return;
-    const input = match[2].trim();
+    const body = event.body.trim();
+
+    if (!body.toLowerCase().startsWith("neo")) return;
+
+    const input = body.slice(3).trim();
     if (!input) return;
 
-    api.getUserInfo(event.senderID, async function (err, data) {
-      if (err) return;
-      const userName = data[event.senderID]?.name || "toi";
+    const uid = event.senderID;
+    let mem = getMem(uid);
 
-      if (creatorRegex.test(input)) {
-        return message.reply(frameResponse("😎 Créateur : **Célestin Olua** 💡"));
+    mem.messages++;
+
+    // 🎭 mood system
+    if (input.includes("blague")) mem.mood = "funny";
+    else if (input.includes("triste")) mem.mood = "calm";
+    else if (input.includes("merci")) mem.mood = "happy";
+    else mem.mood = "normal";
+
+    // 🧠 name memory
+    if (input.toLowerCase().startsWith("je m'appelle")) {
+      mem.name = input.replace(/je m'appelle/i, "").trim();
+    }
+
+    setMem(uid, mem);
+
+    api.setMessageReaction("🌸", event.messageID, () => {}, true);
+
+    try {
+      // 🎨 IMAGINE MODE
+      if (input.toLowerCase().startsWith("imagine ")) {
+        const prompt = input.slice(8);
+
+        return message.reply({
+          body: frame("🎨 " + prompt),
+          attachment: await global.utils.getStreamFromURL(imagine(prompt))
+        });
       }
 
-      api.setMessageReaction("⏳", event.messageID, () => {}, true);
-      const response = await getAIResponse(input, userName, event.senderID);
+      const reply = await askAI(input, mem.mood, mem.name);
+      const clean = cleanText(reply);
 
-      message.reply(frameResponse(response), () => {
-        api.setMessageReaction("✅", event.messageID, () => {}, true);
-      });
-    });
+      return message.reply(frame(clean));
+
+    } catch (e) {
+      return message.reply(frame("❌ erreur légère mais NEO reste active 🌸"));
+    }
   }
 };

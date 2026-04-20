@@ -1,45 +1,80 @@
 const fs = require("fs-extra");
 
+// 🌸 CADRE
+function neo(text) {
+	return `
+🌸 ══━━✥🌺✥━━══ 🌸
+
+✨ ${text}
+
+🌸 ══━━✥🌺✥━━══ 🌸
+`;
+}
+
+// 👑 PHRASES ROYALES ALÉATOIRES
+function getRandomRestartMessage() {
+	const messages = [
+		"🔄 Le Royaume se réveille...\n👑 Le Roi reprend le contrôle",
+		"⚡ Réinitialisation divine en cours...\n🌌 Les systèmes s'alignent",
+		"🔥 Redémarrage du trône...\n👑 Puissance restaurée",
+		"🌙 Le système s'endort...\n🌅 Renaissance imminente",
+		"💫 Synchronisation royale...\n👑 Autorité rétablie",
+		"⚙️ Reconfiguration du noyau...\n👑 Le Boss revient bientôt"
+	];
+	return messages[Math.floor(Math.random() * messages.length)];
+}
+
+// 👑 PHRASES APRÈS REBOOT
+function getRandomBackMessage(time) {
+	const messages = [
+		`✅ Le Roi est de retour\n⏱️ ${time}s\n👑 Tout est sous contrôle`,
+		`🌟 Renaissance accomplie\n⏱️ ${time}s\n🔥 Système opérationnel`,
+		`👑 Le trône est restauré\n⏱️ ${time}s\n⚡ Puissance maximale`,
+		`🌌 Réveil terminé\n⏱️ ${time}s\n👑 Autorité absolue`,
+		`🔥 Retour du Boss\n⏱️ ${time}s\n💫 Système stable`
+	];
+	return messages[Math.floor(Math.random() * messages.length)];
+}
+
 module.exports = {
 	config: {
 		name: "restart",
-		version: "1.1",
-		author: "NTKhang",
+		version: "3.0",
+		author: "NTKhang + Celestin 👑",
 		countDown: 5,
 		role: 2,
 		description: {
-			vi: "Khởi động lại bot",
-			en: "Restart bot"
+			en: "Restart system (King Mode)"
 		},
-		category: "Owner",
-		guide: {
-			vi: "   {pn}: Khởi động lại bot",
-			en: "   {pn}: Restart bot"
-		}
-	},
-
-	langs: {
-		vi: {
-			restartting: "🔄 | Đang khởi động lại bot..."
-		},
-		en: {
-			restartting: "🔄 | Restarting bot..."
-		}
+		category: "system"
 	},
 
 	onLoad: function ({ api }) {
 		const pathFile = `${__dirname}/tmp/restart.txt`;
+
 		if (fs.existsSync(pathFile)) {
 			const [tid, time] = fs.readFileSync(pathFile, "utf-8").split(" ");
-			api.sendMessage(`✅ | Bot restarted\n⏰ | Time: ${(Date.now() - time) / 1000}s`, tid);
+
+			const delay = ((Date.now() - time) / 1000).toFixed(1);
+
+			api.sendMessage(
+				neo(getRandomBackMessage(delay)),
+				tid
+			);
+
 			fs.unlinkSync(pathFile);
 		}
 	},
 
-	onStart: async function ({ message, event, getLang }) {
+	onStart: async function ({ message, event }) {
 		const pathFile = `${__dirname}/tmp/restart.txt`;
+
 		fs.writeFileSync(pathFile, `${event.threadID} ${Date.now()}`);
-		await message.reply(getLang("restartting"));
+
+		await message.reply(
+			neo(getRandomRestartMessage())
+		);
+
 		process.exit(2);
 	}
 };

@@ -3,120 +3,95 @@ const fs = require("fs-extra");
 const path = require("path");
 const { getPrefix } = global.utils;
 
+// 🌸 CADRE STYLE
+function neo(text) {
+	return `
+🌸 ══━━✥🌺✥━━══ 🌸
+
+✨ ${text}
+
+🌸 ══━━✥🌺✥━━══ 🌸
+`;
+}
+
 module.exports = {
-  config: {
-    name: "welcome",
-    version: "2.1",
-    author: "Saimx69x x Célestin 🔥",
-    category: "events"
-  },
+	config: {
+		name: "welcome",
+		version: "3.1",
+		author: "Saimx69x x Célestin 👑",
+		category: "events"
+	},
 
-  onStart: async function ({ api, event, message }) {
-    if (event.logMessageType !== "log:subscribe") return;
+	onStart: async function ({ api, event }) {
+		if (event.logMessageType !== "log:subscribe") return;
 
-    const { threadID, logMessageData } = event;
-    const { addedParticipants } = logMessageData;
-    const hours = new Date().getHours();
-    const prefix = getPrefix(threadID);
-    const nickNameBot = global.GoatBot.config.nickNameBot;
+		const { threadID, logMessageData } = event;
+		const { addedParticipants } = logMessageData;
 
-    // Bot nick set function
-    if (addedParticipants.some(user => user.userFbId === api.getCurrentUserID())) {
-      if (nickNameBot) {
-        try {
-          await api.changeNickname(nickNameBot, threadID, api.getCurrentUserID());
-        } catch (error) {
-          console.error("❌ Error changing bot nickname:", error);
-        }
-      }
+		const prefix = getPrefix(threadID);
+		const botID = api.getCurrentUserID();
 
-      const timeStr = new Date().toLocaleString("fr-FR");
+		// 🤖 BOT JOIN
+		if (addedParticipants.some(u => u.userFbId === botID)) {
+			return api.sendMessage(
+				neo(
+`🤖 SYSTÈME CONNECTÉ
 
-      await api.sendMessage(
-`🇫🇷━━━━━━━━━━━━━━━━━━━━
-🤖 SYSTÈME ACTIVÉ
-━━━━━━━━━━━━━━━━━━━━
-
-⚡ Connexion établie avec succès
-🧠 Intelligence prête à fonctionner
-
+⚡ Bot activé avec succès
 💠 Préfixe : ${prefix}
-💠 Nom : ${nickNameBot || "Bot"}
 
-━━━━━━━━━━━━━━━━━━━━
-🔗 GitHub :
-https://github.com/celestincelestinolua-cmyk/Flemme
+👑 Statut : OPÉRATIONNEL
+🔥 Prêt à servir le groupe`
+				),
+				threadID
+			);
+		}
 
-👤 Créateur :
-https://www.facebook.com/mike.lumema
+		// 👤 USER JOIN
+		const threadInfo = await api.getThreadInfo(threadID);
+		const groupName = threadInfo.threadName;
+		const memberCount = threadInfo.participantIDs.length;
 
-━━━━━━━━━━━━━━━━━━━━
-💬 Tape ${prefix}help pour voir mes commandes
-🕒 ${timeStr}
+		for (const user of addedParticipants) {
+			const userId = user.userFbId;
+			const name = user.fullName;
 
-━━━━━━━━━━━━━━━━━━━━
-🔥 Bot opérationnel • Prêt à servir
-━━━━━━━━━━━━━━━━━━━━`,
-        threadID
-      );
+			try {
+				const time = new Date().toLocaleString("fr-FR");
 
-      return;
-    }
+				// IMAGE API
+				const apiUrl = `https://xsaim8x-xxx-api.onrender.com/api/welcome?name=${encodeURIComponent(name)}&uid=${userId}&threadname=${encodeURIComponent(groupName)}&members=${memberCount}`;
 
-    // Original welcome code for new users
-    const botID = api.getCurrentUserID();
-    
-    if (addedParticipants.some(u => u.userFbId === botID)) return;
+				const cacheDir = path.join(__dirname, "..", "cache");
+				await fs.ensureDir(cacheDir);
 
-    const threadInfo = await api.getThreadInfo(threadID);
-    const groupName = threadInfo.threadName;
-    const memberCount = threadInfo.participantIDs.length;
+				const imgPath = path.join(cacheDir, `welcome_${userId}.png`);
 
-    for (const user of addedParticipants) {
-      const userId = user.userFbId;
-      const fullName = user.fullName;
+				const res = await axios.get(apiUrl, { responseType: "arraybuffer" });
+				fs.writeFileSync(imgPath, res.data);
 
-      try {
-        
-        const timeStr = new Date().toLocaleString("fr-FR");
+				// MESSAGE
+				await api.sendMessage({
+					body: neo(
+`👋 BIENVENUE ${name}
 
-        const apiUrl = `https://xsaim8x-xxx-api.onrender.com/api/welcome?name=${encodeURIComponent(fullName)}&uid=${userId}&threadname=${encodeURIComponent(groupName)}&members=${memberCount}`;
-        const tmp = path.join(__dirname, "..", "cache");
-        await fs.ensureDir(tmp);
-        const imagePath = path.join(tmp, `welcome_${userId}.png`);
-
-        const response = await axios.get(apiUrl, { responseType: "arraybuffer" });
-        fs.writeFileSync(imagePath, response.data);
-
-        await api.sendMessage({
-          body:
-`🇫🇷━━━━━━━━━━━━━━━━━━━━
-✨ BIENVENUE
-━━━━━━━━━━━━━━━━━━━━
-
-👋 Salut ${fullName},
-Bienvenue dans :
-🏷️ ${groupName}
-
+🏷️ Groupe : ${groupName}
 👥 Membres : ${memberCount}
-💎 Tu fais maintenant partie du groupe
 
-━━━━━━━━━━━━━━━━━━━━
-💬 Respect • Bonne ambiance • Participation
-🔥 Profite et fais ta place !
+💬 Respect • Fun • Bonne ambiance
+🔥 Tu es maintenant membre officiel
 
-━━━━━━━━━━━━━━━━━━━━
-🕒 ${timeStr}
-━━━━━━━━━━━━━━━━━━━━`,
-          attachment: fs.createReadStream(imagePath),
-          mentions: [{ tag: fullName, id: userId }]
-        }, threadID);
+🕒 ${time}`
+					),
+					attachment: fs.createReadStream(imgPath),
+					mentions: [{ tag: name, id: userId }]
+				}, threadID);
 
-        fs.unlinkSync(imagePath);
+				fs.unlinkSync(imgPath);
 
-      } catch (err) {
-        console.error("❌ Error sending welcome message:", err);
-      }
-    }
-  }
+			} catch (err) {
+				console.log("❌ welcome error:", err);
+			}
+		}
+	}
 };

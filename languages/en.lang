@@ -1,5 +1,5 @@
 module.exports = {
-	// Tu peux personnaliser les textes ici ou directement dans les commandes
+	// 🌸 CONFIGURATION LANGUE ROYALE 🌸
 
 	autoUpdateThreadInfo: {},
 
@@ -24,8 +24,7 @@ module.exports = {
 `🌸 ══━━✥👑✥━━══ 🌸
 ❌ 𝐄𝐑𝐑𝐄𝐔𝐑 𝐑𝐎𝐘𝐀𝐋 ❌
 
-Le bot n’a pas les permissions administrateur
-pour effectuer cette action.
+Le bot doit être administrateur pour agir.
 
 🌸 ══━━✥👑✥━━══ 🌸`
 		}
@@ -38,7 +37,7 @@ pour effectuer cette action.
 			session3: "après-midi",
 			session4: "soir",
 			leaveType1: "a quitté le royaume",
-			leaveType2: "a été banni du royaume"
+			leaveType2: "a été expulsé du royaume"
 		}
 	},
 
@@ -52,9 +51,9 @@ pour effectuer cette action.
 			added:
 `
 🌸 ══━━✥✨✥━━══ 🌸
-🤖 𝐀𝐂𝐓𝐈𝐕𝐀𝐓𝐈𝐎𝐍 𝐑𝐄𝐂𝐔𝐄
+🤖 𝐀𝐂𝐓𝐈𝐕𝐀𝐓𝐈𝐎𝐍
 
-Le bot a été ajouté dans un nouveau groupe
+Le bot a rejoint un groupe
 👤 Ajouté par : %1
 
 🌸 ══━━✥✨✥━━══ 🌸`,
@@ -64,7 +63,7 @@ Le bot a été ajouté dans un nouveau groupe
 🌸 ══━━✥💥✥━━══ 🌸
 🚫 𝐄𝐗𝐈𝐋 𝐑𝐎𝐘𝐀𝐋
 
-Le bot a été expulsé du groupe
+Le bot a été expulsé
 👤 Par : %1
 
 🌸 ══━━✥💥✥━━══ 🌸`,
@@ -72,9 +71,9 @@ Le bot a été expulsé du groupe
 			footer:
 `
 ━━━━━━━━━━━━━━━━━━━━
-🆔 ID Utilisateur : %1
+🆔 User : %1
 💬 Groupe : %2
-🆔 ID Groupe : %3
+🆔 ID : %3
 🕒 Heure : %4
 ━━━━━━━━━━━━━━━━━━━━`
 		}
@@ -93,9 +92,10 @@ Le bot a été expulsé du groupe
 `🌸 ══━━✥👑✥━━══ 🌸
 ✨ 𝐁𝐈𝐄𝐍𝐕𝐄𝐍𝐔𝐄 𝐑𝐎𝐘𝐀𝐋𝐄 ✨
 
-🤖 Le bot a rejoint le royaume
+🤖 Le bot entre dans le royaume
 🔑 Préfixe : %1
-💬 Tape %1help pour voir les commandes
+
+📜 Tape %1help pour voir les commandes
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
@@ -107,11 +107,11 @@ Le bot a été expulsé du groupe
 	handlerEvents: {
 		commandNotFound:
 `🌸 ══━━✥👑✥━━══ 🌸
-❌ 𝐄𝐑𝐑𝐄𝐔𝐑 𝐑𝐎𝐘𝐀𝐋 ❌
+❌ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐕𝐀𝐋𝐈𝐃𝐄 ❌
 
-Cette commande n’existe pas dans le royaume du bot.
+Cette commande n’existe pas.
 
-💡 Tape /help pour voir les commandes disponibles
+📜 Tape /help pour voir les commandes
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
@@ -119,10 +119,69 @@ Cette commande n’existe pas dans le royaume du bot.
 `🌸 ══━━✥👑✥━━══ 🌸
 🚫 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐓𝐑𝐎𝐔𝐕𝐀𝐁𝐋𝐄 🚫
 
-La commande demandée n’existe pas.
+Commande inconnue.
 
-🔎 Utilise /help pour la liste des commandes
+🔎 Utilise /help
 
-🌸 ══━━✥👑✥━━══ 🌸`
+🌸 ══━━✥👑✥━━══ 🌸`,
+
+		commandSyntaxError:
+`🌸 ══━━✥⚠️✥━━══ 🌸
+📛 𝐒𝐘𝐍𝐓𝐀𝐗𝐄 𝐈𝐍𝐂𝐎𝐑𝐑𝐄𝐂𝐓𝐄
+
+Utilisation incorrecte.
+
+💡 Tape %1help %2
+
+🌸 ══━━✥⚠️✥━━══ 🌸`,
+
+		onlyAdmin:
+`🌸 ══━━✥👑✥━━══ 🌸
+⛔ 𝐀𝐂𝐂𝐄𝐒 𝐑𝐄𝐒𝐓𝐑𝐄𝐈𝐍𝐓
+
+Commande réservée aux admins du groupe.
+
+🌸 ══━━✥👑✥━━══ 🌸`,
+
+		onlyAdminBot:
+`🌸 ══━━✥👑✥━━══ 🌸
+👑 𝐏𝐎𝐔𝐕𝐎𝐈𝐑 𝐒𝐔𝐏𝐑𝐄𝐌𝐄
+
+Seul l’admin du bot peut utiliser ça.
+
+🌸 ══━━✥👑✥━━══ 🌸`,
+
+		onlyAdminBox:
+`🌸 ══━━✥👑✥━━══ 🌸
+⚠️ MODE ADMIN ACTIF
+
+Seuls les admins peuvent utiliser le bot ici.
+
+🌸 ══━━✥👑✥━━══ 🌸`,
+
+		waitingForCommand:
+`🌸 ══━━✥⏳✥━━══ 🌸
+⏱ 𝐏𝐀𝐓𝐈𝐄𝐍𝐓𝐄
+
+Réessaie dans %1 seconde(s).
+
+🌸 ══━━✥⏳✥━━══ 🌸`,
+
+		errorOccurred:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ 𝐄𝐑𝐑𝐄𝐔𝐑
+
+Commande : %2
+
+📌 Détails :
+%3
+
+🌸 ══━━✥💥✥━━══ 🌸`,
+
+		cannotFindCommand:
+`❌ Commande "%1" introuvable.`,
+
+		cannotFindCommandName:
+`❌ Impossible de trouver la commande.`
 	}
 };

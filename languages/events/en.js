@@ -1,104 +1,72 @@
 module.exports = {
-	// Tu peux personnaliser les textes ici ou directement dans les commandes
-	autoUpdateThreadInfo: {},
 
-	checkwarn: {
-		text: {
-			warn:
-`🌸 ══━━✥👑✥━━══ 🌸
-💥 𝐉𝐔𝐆𝐄𝐌𝐄𝐍𝐓 𝐑𝐎𝐘𝐀𝐋 💥
+  autoUpdateThreadInfo: {},
 
-⚠️ Le membre %1 a atteint 3 avertissements
-🚫 Expulsion automatique du groupe
+  checkwarn: {
+    text: {
+      warn:
+"🌸 ══━━✥👑✥━━══ 🌸\n💥 JUGEMENT ROYAL 💥\n\n⚠️ Le membre %1 a atteint 3 avertissements\n🚫 Expulsion du royaume\n\n👤 Nom : %1\n🆔 UID : %2\n\n🔓 Débannir :\n%3warn unban <uid>\n\n🌸 ══━━✥👑✥━━══ 🌸",
 
-👤 Nom : %1
-🆔 UID : %2
+      needPermission:
+"🌸 ══━━✥👑✥━━══ 🌸\n❌ ERREUR ROYALE\n\nLe bot doit être admin pour agir.\n🌸 ══━━✥👑✥━━══ 🌸"
+    }
+  },
 
-🔓 Débannir :
-%3warn unban <uid>
+  leave: {
+    text: {
+      session1: "matin",
+      session2: "midi",
+      session3: "après-midi",
+      session4: "soir",
+      leaveType1: "a quitté le royaume 👋",
+      leaveType2: "a été banni du royaume 🚫"
+    }
+  },
 
-🌸 ══━━✥👑✥━━══ 🌸`,
+  logsbot: {
+    text: {
+      title:
+"🌸 ══━━✥🤖✥━━══ 🌸\n👑 JOURNAL ROYAL 👑\n🌸 ══━━✥🤖✥━━══ 🌸",
 
-			needPermission:
-`🌸 ══━━✥👑✥━━══ 🌸
-❌ 𝐄𝐑𝐑𝐄𝐔𝐑 𝐑𝐎𝐘𝐀𝐋 ❌
+      added:
+"\n🌸 ══━━✥✨✥━━══ 🌸\n🤖 ACTIVATION\nAjouté par : %1\n🌸 ══━━✥✨✥━━══ 🌸",
 
-Le bot n’a pas les permissions administrateur
-pour exécuter cette action
+      kicked:
+"\n🌸 ══━━✥💥✥━━══ 🌸\n🚫 EXIL ROYAL\nPar : %1\n🌸 ══━━✥💥✥━━══ 🌸",
 
-🌸 ══━━✥👑✥━━══ 🌸`
-		}
-	},
+      footer:
+"\n━━━━━━━━━━━━━━━━━━━━\n🆔 User ID : %1\n💬 Groupe : %2\n🆔 Thread ID : %3\n🕒 Heure : %4\n━━━━━━━━━━━━━━━━━━━━"
+    }
+  },
 
-	leave: {
-		text: {
-			session1: "matin",
-			session2: "midi",
-			session3: "après-midi",
-			session4: "soir",
-			leaveType1: "a quitté le royaume",
-			leaveType2: "a été banni du royaume"
-		}
-	},
+  welcome: {
+    text: {
+      session1: "matin",
+      session2: "midi",
+      session3: "après-midi",
+      session4: "soir",
 
-	logsbot: {
-		text: {
-			title:
-`🌸 ══━━✥🤖✥━━══ 🌸
-👑 𝐉𝐎𝐔𝐑𝐍𝐀𝐋 𝐑𝐎𝐘𝐀𝐋 👑
-🌸 ══━━✥🤖✥━━══ 🌸`,
+      welcomeMessage:
+"🌸 ══━━✥👑✥━━══ 🌸\n✨ BIENVENUE DANS NOTRE ROYAUME ✨\n\n🤖 Préfixe : %1\n📜 Tape %1help pour voir les commandes\n\n🌸 ══━━✥👑✥━━══ 🌸",
 
-			added:
-`
-🌸 ══━━✥✨✥━━══ 🌸
-🤖 𝐀𝐋𝐋𝐈𝐀𝐍𝐂𝐄 𝐀𝐂𝐓𝐈𝐕𝐄
+      multiple1: "toi",
+      multiple2: "vous"
+    }
+  },
 
-Le bot a été invoqué dans un nouveau groupe
-👤 Par : %1
+  handlerEvents: {
 
-🌸 ══━━✥✨✥━━══ 🌸`,
+    commandNotFound:
+"🌸 ══━━✥❌✥━━══ 🌸\n📜 ERREUR ROYALE\n\nCette commande n’existe pas dans le royaume.\n💡 Tape %1help\n🌸 ══━━✥📜✥━━══ 🌸",
 
-			kicked:
-`
-🌸 ══━━✥💥✥━━══ 🌸
-🚫 𝐄𝐗𝐈𝐋 𝐃𝐔 𝐁𝐎𝐓
+    commandNotFound2:
+"🌸 ══━━✥⚠️✥━━══ 🌸\n📜 COMMANDE INTROUVABLE\n\nUtilise %1help pour la liste\n🌸 ══━━✥📜✥━━══ 🌸",
 
-Expulsé par : %1
+    onlyAdmin:
+"🌸 ══━━✥👑✥━━══ 🌸\n⛔ ACCÈS REFUSÉ\n\nCommande réservée aux admins du royaume.\n🌸 ══━━✥👑✥━━══ 🌸",
 
-🌸 ══━━✥💥✥━━══ 🌸`,
+    onlyAdminBot:
+"🌸 ══━━✥🤖✥━━══ 🌸\n⚠️ PERMISSION REQUISE\n\nLe bot doit être admin pour agir.\n🌸 ══━━✥🤖✥━━══ 🌸"
+  }
 
-			footer:
-`
-━━━━━━━━━━━━━━━━━━━━
-🆔 ID User : %1
-💬 Royaume : %2
-🆔 ID Groupe : %3
-🕒 Heure : %4
-━━━━━━━━━━━━━━━━━━━━`
-		}
-	},
-
-	onEvent: {},
-
-	welcome: {
-		text: {
-			session1: "matin",
-			session2: "midi",
-			session3: "après-midi",
-			session4: "soir",
-
-			welcomeMessage:
-`🌸 ══━━✥👑✥━━══ 🌸
-✨ 𝐁𝐈𝐄𝐍𝐕𝐄𝐍𝐔𝐄 𝐑𝐎𝐘𝐀𝐋𝐄 ✨
-
-🤖 Le bot a rejoint le royaume
-🔑 Préfixe : %1
-💬 Tape %1help pour les commandes
-
-🌸 ══━━✥👑✥━━══ 🌸`,
-
-			multiple1: "toi",
-			multiple2: "vous"
-		}
-	}
 };

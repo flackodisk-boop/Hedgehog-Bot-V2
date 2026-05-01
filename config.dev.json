@@ -15,7 +15,7 @@
   "adminOnly": {
     "enable": false,
     "ignoreCommand": []
-  },
+  }, 
   "adminBot": [
     "61561648169981"
   ],
@@ -24,7 +24,7 @@
     "whiteListIds": [],
     "notes": "if you enable this feature, only the ids in the whiteListIds section can use the bot"
   },
-  "nickNameBot": "➤『  💥𝕆𝕤𝕔𝕒𝕣-𝕓𝕠𝕥🔥』☜ヅ",
+  "nickNameBot": "➤『  𝘾𝙖𝙨𝙨𝙞𝙙𝙮 𝘼𝙞 』☜ヅ",
   "prefix": "¢",
   "database": {
     "type": "sqlite",

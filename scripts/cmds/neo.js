@@ -5,20 +5,39 @@ const path = require("path");
 // 📦 MEMORY SIMPLE
 const DB_FILE = path.join(__dirname, "neo_memory.json");
 
+// 🔒 SAFE LOAD DB
 function loadDB() {
-  if (!fs.existsSync(DB_FILE)) return {};
-  return JSON.parse(fs.readFileSync(DB_FILE));
+  try {
+    if (!fs.existsSync(DB_FILE)) return {};
+    const data = fs.readFileSync(DB_FILE, "utf-8");
+    return data ? JSON.parse(data) : {};
+  } catch (e) {
+    return {};
+  }
 }
 
 function saveDB(db) {
   fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
 }
 
+// 🧠 MEMORY USER
 function getMem(id) {
   const db = loadDB();
+
   if (!db[id]) {
-    db[id] = { name: null, mood: "normal", messages: 0 };
+    db[id] = {
+      name: null,
+      mood: "normal",
+      messages: 0,
+      uid: id,
+      history: []
+    };
   }
+
+  if (!Array.isArray(db[id].history)) {
+    db[id].history = [];
+  }
+
   return db[id];
 }
 
@@ -28,42 +47,60 @@ function setMem(id, data) {
   saveDB(db);
 }
 
-// 🌸 FRAME
+// 🌸 FRAME AVEC TON CADRE
 function frame(text) {
   return `
+❛ ━━━━━━･❪ ❁ ❫ ･━━━━━━ ❜
+
 🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
 
 ${text}
 
 🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
+
+❛ ━━━━━━･❪ ❁ ❫ ･━━━━━━ ❜
 `;
 }
 
-// 🧹 CLEAN OUTPUT (IMPORTANT)
+// 🕒 HEURE
+function getTime() {
+  return new Date().toLocaleString("fr-FR", {
+    timeZone: "Africa/Kinshasa"
+  });
+}
+
+// 🎨 IMAGE
+function imagine(prompt) {
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+}
+
+// 🔧 SAFE STREAM
+const getStream =
+  global.utils?.getStreamFromURL ||
+  (async (url) =>
+    await axios.get(url, { responseType: "stream" }).then(r => r.data)
+  );
+
+// 🧹 CLEAN TEXT
 function cleanText(text) {
   return text
-    .replace(/🎀.*?\(\s*\d+\/\d+\s*\)/gi, "")
-    .replace(/🎀\s*𝗦𝗵𝗶𝘇𝘂.*?\n?/gi, "")
     .replace(/🤖\s*NEO\s*:/gi, "")
     .replace(/NEO\s*:/gi, "")
     .trim();
 }
 
-// 🎨 IMAGINE
-function imagine(prompt) {
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-}
-
-// 🤖 AI CALL (Christus APIs)
-async function askAI(prompt, mood, name) {
+// 🤖 AI PROMPT
+async function askAI(prompt, mood, name, uid) {
   const fullPrompt = `
-T'es néo IA t'es créé par Célestin olua, le génie congolais t'aime les emojis mais pas trop, ton vrai créateur et Célestin pas Aryan chaucha où quelqu'un d'autre.
+Tu es NEO, IA créée par Célestin Olua 🇨🇩.
 
-Ne mets aucun titre.
-Réponds comme un humain.
-
-Utilisateur: ${name || "ami"}
+Utilisateur :
+Nom: ${name || "inconnu"}
+UID: ${uid}
 Humeur: ${mood}
+Heure: ${getTime()}
+
+Réponds naturellement avec emojis légers 🌸
 
 Message:
 ${prompt}
@@ -73,7 +110,7 @@ ${prompt}
     {
       url: "https://shizuai.vercel.app/chat",
       method: "post",
-      data: { uid: "neo", message: fullPrompt }
+      data: { uid, message: fullPrompt }
     }
   ];
 
@@ -86,12 +123,7 @@ ${prompt}
         timeout: 20000
       });
 
-      return (
-        res.data?.reply ||
-        res.data?.message ||
-        res.data?.response ||
-        "..."
-      );
+      return res.data?.reply || res.data?.message || "…";
     } catch {}
   }
 
@@ -102,7 +134,7 @@ ${prompt}
 module.exports = {
   config: {
     name: "neo",
-    version: "10.0.0",
+    version: "10.0.2",
     role: 0,
     category: "ai"
   },
@@ -113,7 +145,6 @@ module.exports = {
     if (!event.body) return;
 
     const body = event.body.trim();
-
     if (!body.toLowerCase().startsWith("neo")) return;
 
     const input = body.slice(3).trim();
@@ -135,6 +166,14 @@ module.exports = {
       mem.name = input.replace(/je m'appelle/i, "").trim();
     }
 
+    // 🧠 history
+    mem.history.push({
+      text: input,
+      time: getTime()
+    });
+
+    if (mem.history.length > 20) mem.history.shift();
+
     setMem(uid, mem);
 
     api.setMessageReaction("🌸", event.messageID, () => {}, true);
@@ -146,14 +185,25 @@ module.exports = {
 
         return message.reply({
           body: frame("🎨 " + prompt),
-          attachment: await global.utils.getStreamFromURL(imagine(prompt))
+          attachment: await getStream(imagine(prompt))
         });
       }
 
-      const reply = await askAI(input, mem.mood, mem.name);
+      const reply = await askAI(input, mem.mood, mem.name, uid);
       const clean = cleanText(reply);
 
-      return message.reply(frame(clean));
+      const moodText = {
+        funny: "😂 humeur : drôle",
+        calm: "😌 humeur : calme",
+        happy: "😊 humeur : heureux",
+        normal: "🌸 humeur : normale"
+      };
+
+      return message.reply(
+        frame(
+          `${moodText[mem.mood] || "🌸 humeur inconnue"}\n\n${clean}`
+        )
+      );
 
     } catch (e) {
       return message.reply(frame("❌ erreur légère mais NEO reste active 🌸"));

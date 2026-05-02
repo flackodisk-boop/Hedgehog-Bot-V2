@@ -35,63 +35,10 @@ Seul l’administrateur du bot peut utiliser cette commande.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-    commandNotFound:
-`🌸 ══━━✥❌✥━━══ 🌸
-📜 COMMANDE INTROUVABLE
-
-❌ La commande "%1" n’existe pas
-
-💡 Tape %2help pour voir la liste des commandes
-
-🌸 ══━━✥📜✥━━══ 🌸`,
-
-    commandNotFound2:
-`🌸 ══━━✥⚠️✥━━══ 🌸
-📜 COMMANDE INCONNUE
-
-❌ Cette commande n’existe pas
-
-💡 Utilise %1help
-
-🌸 ══━━✥📜✥━━══ 🌸`,
-
-    commandSyntaxError:
-`🌸 ══━━✥⚠️✥━━══ 🌸
-📛 ERREUR DE SYNTAXE
-
-❌ Mauvaise utilisation de la commande "%2"
-
-💡 Tape %1help %2 pour voir l’utilisation
-
-🌸 ══━━✥⚠️✥━━══ 🌸`,
-
-    onlyAdmin:
-`🌸 ══━━✥⛔✥━━══ 🌸
-❌ ACCÈS LIMITÉ
-
-Seuls les administrateurs peuvent utiliser "%1"
-
-🌸 ══━━✥⛔✥━━══ 🌸`,
-
-    onlyAdminToUseOnReply:
-`🌸 ══━━✥⛔✥━━══ 🌸
-❌ ACTION REFUSÉE
-
-Seuls les admins peuvent répondre avec "%1"
-
-🌸 ══━━✥⛔✥━━══ 🌸`,
-
-    onlyAdminToUseOnReaction:
-`🌸 ══━━✥⛔✥━━══ 🌸
-❌ ACTION REFUSÉE
-
-Seuls les admins peuvent réagir avec "%1"
-
-🌸 ══━━✥⛔✥━━══ 🌸`,
-
+    // 🔥 FIX IMPORTANT (alias manquant évite erreurs)
     onlyAdminBot2:
 `🌸 ══━━✥👑✥━━══ 🌸
-❌ ACCÈS BOT
+⛔ ACCÈS BOT
 
 Seul l’admin du bot peut utiliser "%1"
 
@@ -99,7 +46,7 @@ Seul l’admin du bot peut utiliser "%1"
 
     onlyAdminBot2ToUseOnReply:
 `🌸 ══━━✥👑✥━━══ 🌸
-❌ ACTION INTERDITE
+⛔ ACTION REFUSÉE
 
 Seul l’admin du bot peut répondre avec "%1"
 
@@ -107,73 +54,97 @@ Seul l’admin du bot peut répondre avec "%1"
 
     onlyAdminBot2ToUseOnReaction:
 `🌸 ══━━✥👑✥━━══ 🌸
-❌ ACTION INTERDITE
+⛔ ACTION REFUSÉE
 
 Seul l’admin du bot peut réagir avec "%1"
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
+    commandNotFound:
+`🌸 ══━━✥❌✥━━══ 🌸
+📜 COMMANDE INTROUVABLE
+
+❌ "%1" n’existe pas
+
+💡 Tape %2help
+
+🌸 ══━━✥📜✥━━══ 🌸`,
+
+    commandNotFound2:
+`🌸 ══━━✥⚠️✥━━══ 🌸
+📜 COMMANDE INCONNUE
+
+💡 Utilise %1help
+
+🌸 ══━━✥📜✥━━══ 🌸`,
+
+    commandSyntaxError:
+`🌸 ══━━✥⚠️✥━━══ 🌸
+📛 ERREUR SYNTAXE
+
+Commande "%2" incorrecte
+
+💡 %1help %2
+
+🌸 ══━━✥⚠️✥━━══ 🌸`,
+
+    onlyAdmin:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACCÈS LIMITÉ
+
+Seuls les admins peuvent utiliser "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
+    onlyAdminToUseOnReply:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACTION REFUSÉE
+
+Admins uniquement pour "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
+    onlyAdminToUseOnReaction:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACTION REFUSÉE
+
+Admins uniquement pour "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
     waitingForCommand:
 `🌸 ══━━✥⏳✥━━══ 🌸
-⏱ ATTENTION
-
-Veuillez patienter %1 seconde(s) avant de réutiliser cette commande.
+⏱ ATTENDS %1s
 
 🌸 ══━━✥⏳✥━━══ 🌸`,
 
     errorOccurred:
 `🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR SYSTÈME
+❌ ERREUR
 
 Commande : %2
 
-📌 Détails :
 %3
 
 🌸 ══━━✥💥✥━━══ 🌸`,
 
     errorOccurred2:
-`🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR ONCHAT
-
-Commande : %2
-
-%3`,
+`❌ ERREUR ONCHAT : %2\n%3`,
 
     errorOccurred3:
-`🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR ONREPLY
-
-Commande : %2
-
-%3`,
+`❌ ERREUR ONREPLY : %2\n%3`,
 
     errorOccurred4:
-`🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR ONREACTION
-
-Commande : %2
-
-%3`,
+`❌ ERREUR ONREACTION : %2\n%3`,
 
     errorOccurred5:
-`🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR ONEVENT
-
-Commande : %2
-
-%3`,
+`❌ ERREUR ONEVENT : %2\n%3`,
 
     errorOccurred7:
-`🌸 ══━━✥💥✥━━══ 🌸
-❌ ERREUR ONANYEVENT
-
-Commande : %2
-
-%3`,
+`❌ ERREUR ONANYEVENT : %2\n%3`,
 
     cannotFindCommandName:
-`❌ Impossible de trouver la commande pour répondre.`,
+`❌ Impossible de trouver la commande.`,
 
     cannotFindCommand:
 `❌ Commande "%1" introuvable.`

@@ -14,22 +14,22 @@ function applyFont(text) {
   return text.split('').map(c => fontMap[c] || c).join('');
 }
 
-// 🌸 CADRE
+// 🌸 CADRE STYLE FLEURS
 function neo(text) {
   return `
-🌸 ══━━✥👑✥━━══ 🌸
+❛ ━━━━━━･❪ 🌸 ❫ ･━━━━━━ ❜
 
 ${text}
 
-🌸 ══━━✥👑✥━━══ 🌸
+◑ ━━━━━ ▣ ━━━━━ ◐
 `;
 }
 
 module.exports = {
   config: {
     name: "help",
-    version: "2.1",
-    author: "Camille 💙 + Neo Edit",
+    version: "2.3",
+    author: "Neo Edit",
     countDown: 5,
     role: 0,
     category: "info"
@@ -41,7 +41,7 @@ module.exports = {
     // ================= MENU PRINCIPAL =================
     if (!args[0]) {
       const categories = {};
-      let msg = `👑🌸 MENU ROYAL 🌸👑\n`;
+      let msg = `🌸 MENU ROYAL 🌸\n`;
 
       for (const [name, cmd] of commands) {
         if (cmd.config.role > role) continue;
@@ -55,18 +55,18 @@ module.exports = {
       for (const cat of Object.keys(categories).sort()) {
 
         msg += `
-🌸━━━━━━━━━━━ ✦ ${applyFont(cat.toUpperCase())} ✦ ━━━━━━━━━━━🌸
+🌸━━━━━━━ ✦ ${applyFont(cat.toUpperCase())} ✦ ━━━━━━━🌸
 `;
 
         for (const name of categories[cat].sort()) {
           msg += `✨ ${applyFont(name)}\n`;
         }
 
-        msg += `🌸━━━━━━━━━━━━━━━━━━━━━━━━━━━━🌸\n`;
+        msg += `🌸━━━━━━━━━━━━━━━━━━━━━━🌸\n`;
       }
 
       msg += `
-👑 PREFIX : ${prefix}
+🌸 PREFIX : ${prefix}
 📊 COMMANDES : ${commands.size}
 💬 ${prefix}help <commande>
 `;
@@ -82,7 +82,9 @@ module.exports = {
       commands.get(aliases.get(commandName));
 
     if (!command) {
-      return message.reply(neo("❌ Commande introuvable"));
+      return message.reply(
+        neo(`❌ Commande introuvable`)
+      );
     }
 
     const cfg = command.config;
@@ -94,7 +96,7 @@ module.exports = {
       (cfg.guide?.en || "{pn} " + cfg.name).replace("{pn}", prefix);
 
     const info = `
-👑 ${applyFont(cfg.name)}
+🌸 ${applyFont(cfg.name)}
 
 📌 Version : ${cfg.version || "1.0"}
 👤 Auteur : ${cfg.author}
@@ -102,7 +104,7 @@ module.exports = {
 ⏳ Cooldown : ${cfg.countDown || 2}s
 
 📖 Description :
-${cfg.longDescription?.en || "Aucune description"}
+${cfg.description?.en || "Aucune description"}
 
 💡 Utilisation :
 ${usage}

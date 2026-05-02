@@ -1,172 +1,129 @@
 module.exports = {
-	// 🌸 CONFIGURATION LANGUE ROYALE 🌸
+  handlerEvents: {
 
-	autoUpdateThreadInfo: {},
+    userBanned:
+`🌸 ══━━✥🚫✥━━══ 🌸
+❌ Tu es banni de l’utilisation du bot
 
-	checkwarn: {
-		text: {
-			warn: `
-🌸 ══━━✥👑✥━━══ 🌸
-💥 𝐉𝐔𝐆𝐄𝐌𝐄𝐍𝐓 𝐑𝐎𝐘𝐀𝐋 💥
-
-⚠️ Le membre %1 a atteint 3 avertissements
-🚫 Expulsion automatique du groupe
-
-👤 Nom : %1
-🆔 UID : %2
-
-🔓 Débannir :
-%3warn unban <uid>
-
-🌸 ══━━✥👑✥━━══ 🌸`,
-
-			needPermission: `
-🌸 ══━━✥👑✥━━══ 🌸
-❌ 𝐄𝐑𝐑𝐄𝐔𝐑 𝐑𝐎𝐘𝐀𝐋 ❌
-
-Le bot doit être administrateur pour agir.
-
-🌸 ══━━✥👑✥━━══ 🌸`
-		}
-	},
-
-	leave: {
-		text: {
-			session1: "matin",
-			session2: "midi",
-			session3: "après-midi",
-			session4: "soir",
-			leaveType1: "a quitté le royaume",
-			leaveType2: "a été expulsé du royaume"
-		}
-	},
-
-	logsbot: {
-		text: {
-			title: `
-🌸 ══━━✥🤖✥━━══ 🌸
-👑 𝐉𝐎𝐔𝐑𝐍𝐀𝐋 𝐑𝐎𝐘𝐀𝐋 👑
-🌸 ══━━✥🤖✥━━══ 🌸`,
-
-			added: `
-🌸 ══━━✥✨✥━━══ 🌸
-🤖 𝐀𝐂𝐓𝐈𝐕𝐀𝐓𝐈𝐎𝐍
-
-Le bot a rejoint un groupe
-👤 Ajouté par : %1
-
-🌸 ══━━✥✨✥━━══ 🌸`,
-
-			kicked: `
-🌸 ══━━✥💥✥━━══ 🌸
-🚫 𝐄𝐗𝐈𝐋 𝐑𝐎𝐘𝐀𝐋
-
-Le bot a été expulsé
-👤 Par : %1
-
-🌸 ══━━✥💥✥━━══ 🌸`,
-
-			footer: `
-━━━━━━━━━━━━━━━━━━━━
-🆔 User : %1
-💬 Groupe : %2
+📌 Raison : %1
+⏰ Date : %2
 🆔 ID : %3
-🕒 Heure : %4
-━━━━━━━━━━━━━━━━━━━━`
-		}
-	},
+🌸 ══━━✥🚫✥━━══ 🌸`,
 
-	onEvent: {},
+    threadBanned:
+`🌸 ══━━✥🚫✥━━══ 🌸
+❌ Ce groupe est banni du bot
 
-	welcome: {
-		text: {
-			session1: "matin",
-			session2: "midi",
-			session3: "après-midi",
-			session4: "soir",
+📌 Raison : %1
+⏰ Date : %2
+🆔 Groupe : %3
+🌸 ══━━✥🚫✥━━══ 🌸`,
 
-			welcomeMessage: `
-🌸 ══━━✥👑✥━━══ 🌸
-✨ 𝐁𝐈𝐄𝐍𝐕𝐄𝐍𝐔𝐄 𝐑𝐎𝐘𝐀𝐋𝐄 ✨
+    onlyAdminBox:
+`🌸 ══━━✥👑✥━━══ 🌸
+⛔ MODE ADMIN ACTIVÉ
 
-🤖 Le bot entre dans le royaume
-🔑 Préfixe : %1
-
-📜 Tape %1help pour voir les commandes
+Seuls les administrateurs du groupe peuvent utiliser le bot ici.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-			multiple1: "toi",
-			multiple2: "vous"
-		}
-	},
+    onlyAdminBot:
+`🌸 ══━━✥👑✥━━══ 🌸
+⛔ ACCÈS REFUSÉ
 
-	handlerEvents: {
-		commandNotFound: `
-🌸 ══━━✥👑✥━━══ 🌸
-❌ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐕𝐀𝐋𝐈𝐃𝐄 ❌
-
-Cette commande n’existe pas.
-
-📜 Tape %1help pour voir les commandes
+Seul l’administrateur du bot peut utiliser cette commande.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		commandNotFound2: `
-🌸 ══━━✥👑✥━━══ 🌸
-🚫 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐓𝐑𝐎𝐔𝐕𝐀𝐁𝐋𝐄 🚫
+    commandNotFound:
+`🌸 ══━━✥❌✥━━══ 🌸
+📜 COMMANDE INTROUVABLE
 
-Commande inconnue.
+❌ La commande "%1" n’existe pas
 
-🔎 Utilise %1help
+💡 Tape %2help pour voir la liste des commandes
 
-🌸 ══━━✥👑✥━━══ 🌸`,
+🌸 ══━━✥📜✥━━══ 🌸`,
 
-		commandSyntaxError: `
-🌸 ══━━✥⚠️✥━━══ 🌸
-📛 𝐒𝐘𝐍𝐓𝐀𝐗𝐄 𝐈𝐍𝐂𝐎𝐑𝐑𝐄𝐂𝐓𝐄
+    commandNotFound2:
+`🌸 ══━━✥⚠️✥━━══ 🌸
+📜 COMMANDE INCONNUE
 
-Utilisation incorrecte.
+❌ Cette commande n’existe pas
 
-💡 Tape %1help %2
+💡 Utilise %1help
+
+🌸 ══━━✥📜✥━━══ 🌸`,
+
+    commandSyntaxError:
+`🌸 ══━━✥⚠️✥━━══ 🌸
+📛 ERREUR DE SYNTAXE
+
+❌ Mauvaise utilisation de la commande "%2"
+
+💡 Tape %1help %2 pour voir l’utilisation
 
 🌸 ══━━✥⚠️✥━━══ 🌸`,
 
-		onlyAdmin: `
-🌸 ══━━✥👑✥━━══ 🌸
-⛔ 𝐀𝐂𝐂𝐄𝐒 𝐑𝐄𝐒𝐓𝐑𝐄𝐈𝐍𝐓
+    onlyAdmin:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACCÈS LIMITÉ
 
-Commande réservée aux admins du groupe.
+Seuls les administrateurs peuvent utiliser "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
+    onlyAdminToUseOnReply:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACTION REFUSÉE
+
+Seuls les admins peuvent répondre avec "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
+    onlyAdminToUseOnReaction:
+`🌸 ══━━✥⛔✥━━══ 🌸
+❌ ACTION REFUSÉE
+
+Seuls les admins peuvent réagir avec "%1"
+
+🌸 ══━━✥⛔✥━━══ 🌸`,
+
+    onlyAdminBot2:
+`🌸 ══━━✥👑✥━━══ 🌸
+❌ ACCÈS BOT
+
+Seul l’admin du bot peut utiliser "%1"
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		onlyAdminBot: `
-🌸 ══━━✥👑✥━━══ 🌸
-👑 𝐏𝐎𝐔𝐕𝐎𝐈𝐑 𝐒𝐔𝐏𝐑𝐄𝐌𝐄
+    onlyAdminBot2ToUseOnReply:
+`🌸 ══━━✥👑✥━━══ 🌸
+❌ ACTION INTERDITE
 
-Seul l’admin du bot peut utiliser ça.
-
-🌸 ══━━✥👑✥━━══ 🌸`,
-
-		onlyAdminBox: `
-🌸 ══━━✥👑✥━━══ 🌸
-⚠️ MODE ADMIN ACTIF
-
-Seuls les admins peuvent utiliser le bot ici.
+Seul l’admin du bot peut répondre avec "%1"
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		waitingForCommand: `
-🌸 ══━━✥⏳✥━━══ 🌸
-⏱ 𝐏𝐀𝐓𝐈𝐄𝐍𝐓𝐄
+    onlyAdminBot2ToUseOnReaction:
+`🌸 ══━━✥👑✥━━══ 🌸
+❌ ACTION INTERDITE
 
-Réessaie dans %1 seconde(s).
+Seul l’admin du bot peut réagir avec "%1"
+
+🌸 ══━━✥👑✥━━══ 🌸`,
+
+    waitingForCommand:
+`🌸 ══━━✥⏳✥━━══ 🌸
+⏱ ATTENTION
+
+Veuillez patienter %1 seconde(s) avant de réutiliser cette commande.
 
 🌸 ══━━✥⏳✥━━══ 🌸`,
 
-		errorOccurred: `
-🌸 ══━━✥💥✥━━══ 🌸
-❌ 𝐄𝐑𝐑𝐄𝐔𝐑
+    errorOccurred:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR SYSTÈME
 
 Commande : %2
 
@@ -175,8 +132,50 @@ Commande : %2
 
 🌸 ══━━✥💥✥━━══ 🌸`,
 
-		cannotFindCommand: `❌ Commande "%1" introuvable.`,
+    errorOccurred2:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR ONCHAT
 
-		cannotFindCommandName: `❌ Impossible de trouver la commande.`
-	}
+Commande : %2
+
+%3`,
+
+    errorOccurred3:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR ONREPLY
+
+Commande : %2
+
+%3`,
+
+    errorOccurred4:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR ONREACTION
+
+Commande : %2
+
+%3`,
+
+    errorOccurred5:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR ONEVENT
+
+Commande : %2
+
+%3`,
+
+    errorOccurred7:
+`🌸 ══━━✥💥✥━━══ 🌸
+❌ ERREUR ONANYEVENT
+
+Commande : %2
+
+%3`,
+
+    cannotFindCommandName:
+`❌ Impossible de trouver la commande pour répondre.`,
+
+    cannotFindCommand:
+`❌ Commande "%1" introuvable.`
+  }
 };

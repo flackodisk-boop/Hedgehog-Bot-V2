@@ -1,72 +1,40 @@
 module.exports = {
-
-  autoUpdateThreadInfo: {},
-
-  checkwarn: {
-    text: {
-      warn:
-"🌸 ══━━✥👑✥━━══ 🌸\n💥 JUGEMENT ROYAL 💥\n\n⚠️ Le membre %1 a atteint 3 avertissements\n🚫 Expulsion du royaume\n\n👤 Nom : %1\n🆔 UID : %2\n\n🔓 Débannir :\n%3warn unban <uid>\n\n🌸 ══━━✥👑✥━━══ 🌸",
-
-      needPermission:
-"🌸 ══━━✥👑✥━━══ 🌸\n❌ ERREUR ROYALE\n\nLe bot doit être admin pour agir.\n🌸 ══━━✥👑✥━━══ 🌸"
-    }
-  },
-
-  leave: {
-    text: {
-      session1: "matin",
-      session2: "midi",
-      session3: "après-midi",
-      session4: "soir",
-      leaveType1: "a quitté le royaume 👋",
-      leaveType2: "a été banni du royaume 🚫"
-    }
-  },
-
-  logsbot: {
-    text: {
-      title:
-"🌸 ══━━✥🤖✥━━══ 🌸\n👑 JOURNAL ROYAL 👑\n🌸 ══━━✥🤖✥━━══ 🌸",
-
-      added:
-"\n🌸 ══━━✥✨✥━━══ 🌸\n🤖 ACTIVATION\nAjouté par : %1\n🌸 ══━━✥✨✥━━══ 🌸",
-
-      kicked:
-"\n🌸 ══━━✥💥✥━━══ 🌸\n🚫 EXIL ROYAL\nPar : %1\n🌸 ══━━✥💥✥━━══ 🌸",
-
-      footer:
-"\n━━━━━━━━━━━━━━━━━━━━\n🆔 User ID : %1\n💬 Groupe : %2\n🆔 Thread ID : %3\n🕒 Heure : %4\n━━━━━━━━━━━━━━━━━━━━"
-    }
-  },
-
-  welcome: {
-    text: {
-      session1: "matin",
-      session2: "midi",
-      session3: "après-midi",
-      session4: "soir",
-
-      welcomeMessage:
-"🌸 ══━━✥👑✥━━══ 🌸\n✨ BIENVENUE DANS NOTRE ROYAUME ✨\n\n🤖 Préfixe : %1\n📜 Tape %1help pour voir les commandes\n\n🌸 ══━━✥👑✥━━══ 🌸",
-
-      multiple1: "toi",
-      multiple2: "vous"
-    }
-  },
-
-  handlerEvents: {
-
-    commandNotFound:
-"🌸 ══━━✥❌✥━━══ 🌸\n📜 ERREUR ROYALE\n\nCette commande n’existe pas dans le royaume.\n💡 Tape %1help\n🌸 ══━━✥📜✥━━══ 🌸",
-
-    commandNotFound2:
-"🌸 ══━━✥⚠️✥━━══ 🌸\n📜 COMMANDE INTROUVABLE\n\nUtilise %1help pour la liste\n🌸 ══━━✥📜✥━━══ 🌸",
-
-    onlyAdmin:
-"🌸 ══━━✥👑✥━━══ 🌸\n⛔ ACCÈS REFUSÉ\n\nCommande réservée aux admins du royaume.\n🌸 ══━━✥👑✥━━══ 🌸",
-
-    onlyAdminBot:
-"🌸 ══━━✥🤖✥━━══ 🌸\n⚠️ PERMISSION REQUISE\n\nLe bot doit être admin pour agir.\n🌸 ══━━✥🤖✥━━══ 🌸"
-  }
-
+	// You can customize the language here or directly in the command files
+	autoUpdateThreadInfo: {},
+	checkwarn: {
+		text: {
+			warn: "Member %1 has been warned 3 times before and has been banned from the chat box\n- Name: %1\n- Uid: %2\n- To unban, please use the \"%3warn unban <uid>\" command (with uid is the uid of the person you want to unban)",
+			needPermission: "Bot needs administrator permission to kick banned members"
+		}
+	},
+	leave: {
+		text: {
+			session1: "morning",
+			session2: "noon",
+			session3: "afternoon",
+			session4: "evening",
+			leaveType1: "left the group",
+			leaveType2: "was kicked from the group"
+		}
+	},
+	logsbot: {
+		text: {
+			title: "====== Bot logs ======",
+			added: "\n✅\nEvent: bot has been added to a new group\n- Added by: %1",
+			kicked: "\n❌\nEvent: bot has been kicked\n- Kicked by: %1",
+			footer: "\n- User ID: %1\n- Group: %2\n- Group ID: %3\n- Time: %4"
+		}
+	},
+	onEvent: {},
+	welcome: {
+		text: {
+			session1: "morning",
+			session2: "noon",
+			session3: "afternoon",
+			session4: "evening",
+			welcomeMessage: "Thank you for inviting me to the group!\nBot prefix: %1\nTo view the list of commands, please enter: %1help",
+			multiple1: "you",
+			multiple2: "you guys"
+		}
+	}
 };

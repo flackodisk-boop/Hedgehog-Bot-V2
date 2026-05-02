@@ -5,8 +5,8 @@ module.exports = {
 
 	checkwarn: {
 		text: {
-			warn:
-`🌸 ══━━✥👑✥━━══ 🌸
+			warn: `
+🌸 ══━━✥👑✥━━══ 🌸
 💥 𝐉𝐔𝐆𝐄𝐌𝐄𝐍𝐓 𝐑𝐎𝐘𝐀𝐋 💥
 
 ⚠️ Le membre %1 a atteint 3 avertissements
@@ -20,8 +20,8 @@ module.exports = {
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-			needPermission:
-`🌸 ══━━✥👑✥━━══ 🌸
+			needPermission: `
+🌸 ══━━✥👑✥━━══ 🌸
 ❌ 𝐄𝐑𝐑𝐄𝐔𝐑 𝐑𝐎𝐘𝐀𝐋 ❌
 
 Le bot doit être administrateur pour agir.
@@ -43,13 +43,12 @@ Le bot doit être administrateur pour agir.
 
 	logsbot: {
 		text: {
-			title:
-`🌸 ══━━✥🤖✥━━══ 🌸
+			title: `
+🌸 ══━━✥🤖✥━━══ 🌸
 👑 𝐉𝐎𝐔𝐑𝐍𝐀𝐋 𝐑𝐎𝐘𝐀𝐋 👑
 🌸 ══━━✥🤖✥━━══ 🌸`,
 
-			added:
-`
+			added: `
 🌸 ══━━✥✨✥━━══ 🌸
 🤖 𝐀𝐂𝐓𝐈𝐕𝐀𝐓𝐈𝐎𝐍
 
@@ -58,8 +57,7 @@ Le bot a rejoint un groupe
 
 🌸 ══━━✥✨✥━━══ 🌸`,
 
-			kicked:
-`
+			kicked: `
 🌸 ══━━✥💥✥━━══ 🌸
 🚫 𝐄𝐗𝐈𝐋 𝐑𝐎𝐘𝐀𝐋
 
@@ -68,8 +66,7 @@ Le bot a été expulsé
 
 🌸 ══━━✥💥✥━━══ 🌸`,
 
-			footer:
-`
+			footer: `
 ━━━━━━━━━━━━━━━━━━━━
 🆔 User : %1
 💬 Groupe : %2
@@ -88,8 +85,8 @@ Le bot a été expulsé
 			session3: "après-midi",
 			session4: "soir",
 
-			welcomeMessage:
-`🌸 ══━━✥👑✥━━══ 🌸
+			welcomeMessage: `
+🌸 ══━━✥👑✥━━══ 🌸
 ✨ 𝐁𝐈𝐄𝐍𝐕𝐄𝐍𝐔𝐄 𝐑𝐎𝐘𝐀𝐋𝐄 ✨
 
 🤖 Le bot entre dans le royaume
@@ -105,28 +102,28 @@ Le bot a été expulsé
 	},
 
 	handlerEvents: {
-		commandNotFound:
-`🌸 ══━━✥👑✥━━══ 🌸
+		commandNotFound: `
+🌸 ══━━✥👑✥━━══ 🌸
 ❌ 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐕𝐀𝐋𝐈𝐃𝐄 ❌
 
 Cette commande n’existe pas.
 
-📜 Tape /help pour voir les commandes
+📜 Tape %1help pour voir les commandes
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		commandNotFound2:
-`🌸 ══━━✥👑✥━━══ 🌸
+		commandNotFound2: `
+🌸 ══━━✥👑✥━━══ 🌸
 🚫 𝐂𝐎𝐌𝐌𝐀𝐍𝐃𝐄 𝐈𝐍𝐓𝐑𝐎𝐔𝐕𝐀𝐁𝐋𝐄 🚫
 
 Commande inconnue.
 
-🔎 Utilise /help
+🔎 Utilise %1help
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		commandSyntaxError:
-`🌸 ══━━✥⚠️✥━━══ 🌸
+		commandSyntaxError: `
+🌸 ══━━✥⚠️✥━━══ 🌸
 📛 𝐒𝐘𝐍𝐓𝐀𝐗𝐄 𝐈𝐍𝐂𝐎𝐑𝐑𝐄𝐂𝐓𝐄
 
 Utilisation incorrecte.
@@ -135,40 +132,40 @@ Utilisation incorrecte.
 
 🌸 ══━━✥⚠️✥━━══ 🌸`,
 
-		onlyAdmin:
-`🌸 ══━━✥👑✥━━══ 🌸
+		onlyAdmin: `
+🌸 ══━━✥👑✥━━══ 🌸
 ⛔ 𝐀𝐂𝐂𝐄𝐒 𝐑𝐄𝐒𝐓𝐑𝐄𝐈𝐍𝐓
 
 Commande réservée aux admins du groupe.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		onlyAdminBot:
-`🌸 ══━━✥👑✥━━══ 🌸
+		onlyAdminBot: `
+🌸 ══━━✥👑✥━━══ 🌸
 👑 𝐏𝐎𝐔𝐕𝐎𝐈𝐑 𝐒𝐔𝐏𝐑𝐄𝐌𝐄
 
 Seul l’admin du bot peut utiliser ça.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		onlyAdminBox:
-`🌸 ══━━✥👑✥━━══ 🌸
+		onlyAdminBox: `
+🌸 ══━━✥👑✥━━══ 🌸
 ⚠️ MODE ADMIN ACTIF
 
 Seuls les admins peuvent utiliser le bot ici.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-		waitingForCommand:
-`🌸 ══━━✥⏳✥━━══ 🌸
+		waitingForCommand: `
+🌸 ══━━✥⏳✥━━══ 🌸
 ⏱ 𝐏𝐀𝐓𝐈𝐄𝐍𝐓𝐄
 
 Réessaie dans %1 seconde(s).
 
 🌸 ══━━✥⏳✥━━══ 🌸`,
 
-		errorOccurred:
-`🌸 ══━━✥💥✥━━══ 🌸
+		errorOccurred: `
+🌸 ══━━✥💥✥━━══ 🌸
 ❌ 𝐄𝐑𝐑𝐄𝐔𝐑
 
 Commande : %2
@@ -178,10 +175,8 @@ Commande : %2
 
 🌸 ══━━✥💥✥━━══ 🌸`,
 
-		cannotFindCommand:
-`❌ Commande "%1" introuvable.`,
+		cannotFindCommand: `❌ Commande "%1" introuvable.`,
 
-		cannotFindCommandName:
-`❌ Impossible de trouver la commande.`
+		cannotFindCommandName: `❌ Impossible de trouver la commande.`
 	}
 };

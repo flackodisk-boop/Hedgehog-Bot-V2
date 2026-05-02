@@ -2,16 +2,16 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-// 📦 MEMORY SIMPLE
+// 📦 MEMORY 7 JOURS
 const DB_FILE = path.join(__dirname, "neo_memory.json");
+const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
-// 🔒 SAFE LOAD DB
+// ================= DB =================
 function loadDB() {
   try {
     if (!fs.existsSync(DB_FILE)) return {};
-    const data = fs.readFileSync(DB_FILE, "utf-8");
-    return data ? JSON.parse(data) : {};
-  } catch (e) {
+    return JSON.parse(fs.readFileSync(DB_FILE, "utf-8") || "{}");
+  } catch {
     return {};
   }
 }
@@ -20,23 +20,20 @@ function saveDB(db) {
   fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
 }
 
-// 🧠 MEMORY USER
+// ================= MEMORY =================
 function getMem(id) {
   const db = loadDB();
 
   if (!db[id]) {
     db[id] = {
       name: null,
-      mood: "normal",
-      messages: 0,
-      uid: id,
-      history: []
+      history: [],
+      lastSeen: Date.now(),
+      mood: "normal"
     };
   }
 
-  if (!Array.isArray(db[id].history)) {
-    db[id].history = [];
-  }
+  if (!Array.isArray(db[id].history)) db[id].history = [];
 
   return db[id];
 }
@@ -47,94 +44,108 @@ function setMem(id, data) {
   saveDB(db);
 }
 
-// 🌸 FRAME AVEC TON CADRE
+// ================= FRAME =================
 function frame(text) {
   return `
-❛ ━━━━━━･❪ ❁ ❫ ･━━━━━━ ❜
-
-🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
-
+┅┅┅┅┅┅༻❁༺┅┅┅┅┅
 ${text}
-
-🌸 ࿇ ══━━✥🌺✥━━══ ࿇ 🌸
-
-❛ ━━━━━━･❪ ❁ ❫ ･━━━━━━ ❜
+┅┅┅┅┅┅༻❁༺┅┅┅┅┅
 `;
 }
 
-// 🕒 HEURE
+// ================= TIME =================
 function getTime() {
   return new Date().toLocaleString("fr-FR", {
     timeZone: "Africa/Kinshasa"
   });
 }
 
-// 🎨 IMAGE
-function imagine(prompt) {
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-}
-
-// 🔧 SAFE STREAM
-const getStream =
-  global.utils?.getStreamFromURL ||
-  (async (url) =>
-    await axios.get(url, { responseType: "stream" }).then(r => r.data)
-  );
-
-// 🧹 CLEAN TEXT
-function cleanText(text) {
-  return text
-    .replace(/🤖\s*NEO\s*:/gi, "")
-    .replace(/NEO\s*:/gi, "")
+// ================= CLEAN (ANTI SHIZU) =================
+function clean(text) {
+  return (text || "")
+    .replace(/shizu/gi, "")
+    .replace(/𝗦𝗵𝗶𝘇𝘂/gi, "")
+    .replace(/Shizu/gi, "")
+    .replace(/\(\s*\d+\s*\/\s*\d+\s*\)/g, "")
+    .replace(/\b\d{3,}\b/g, "")
+    .replace(/```/g, "")
     .trim();
 }
 
-// 🤖 AI PROMPT
-async function askAI(prompt, mood, name, uid) {
+// ================= IMAGE =================
+function imagine(prompt) {
+  const safe = (prompt || "")
+    .replace(/neo/gi, "")
+    .replace(/shizu/gi, "")
+    .replace(/aryan/gi, "")
+    .replace(/const|require|function|module/gi, "")
+    .slice(0, 120);
+
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(safe)}`;
+}
+
+// ================= VOICE =================
+async function toVoice(text) {
+  const url =
+    "https://translate.google.com/translate_tts?ie=UTF-8&q=" +
+    encodeURIComponent((text || "").slice(0, 200)) +
+    "&tl=fr&client=tw-ob";
+
+  try {
+    return await axios.get(url, { responseType: "stream" }).then(r => r.data);
+  } catch {
+    return null;
+  }
+}
+
+// ================= AI =================
+async function askAI(prompt, mem, uid) {
   const fullPrompt = `
-Tu es NEO, IA créée par Célestin Olua 🇨🇩.
+Tu es NEO 🤖
+Créé uniquement par Célestin Olua 🇨🇩
 
-Utilisateur :
-Nom: ${name || "inconnu"}
-UID: ${uid}
-Humeur: ${mood}
 Heure: ${getTime()}
+Utilisateur: ${mem.name || "inconnu"}
 
-Réponds naturellement avec emojis légers 🌸
+Réponds naturellement avec emojis 🌸
 
 Message:
 ${prompt}
 `;
 
-  const services = [
-    {
-      url: "https://shizuai.vercel.app/chat",
-      method: "post",
-      data: { uid, message: fullPrompt }
+  try {
+    const res = await axios.post(
+      "https://shizuai.vercel.app/chat",
+      {
+        uid,
+        message: fullPrompt
+      },
+      { timeout: 15000 }
+    );
+
+    let reply =
+      res.data?.reply ||
+      res.data?.message ||
+      "…";
+
+    reply = clean(reply);
+
+    if (reply.toLowerCase().includes("shizu")) {
+      reply = reply.replace(/shizu/gi, "");
     }
-  ];
 
-  for (let s of services) {
-    try {
-      const res = await axios({
-        method: s.method,
-        url: s.url,
-        data: s.data,
-        timeout: 20000
-      });
+    return reply;
 
-      return res.data?.reply || res.data?.message || "…";
-    } catch {}
+  } catch {
+    return "Je réfléchis doucement... 🌸";
   }
-
-  return "Je réfléchis doucement... 🌸";
 }
 
-// 🧠 MODULE
+// ================= MODULE =================
 module.exports = {
   config: {
     name: "neo",
-    version: "10.0.2",
+    version: "18.0.0",
     role: 0,
     category: "ai"
   },
@@ -145,68 +156,68 @@ module.exports = {
     if (!event.body) return;
 
     const body = event.body.trim();
-    if (!body.toLowerCase().startsWith("neo")) return;
+    const lower = body.toLowerCase();
+
+    if (!lower.startsWith("neo")) return;
 
     const input = body.slice(3).trim();
-    if (!input) return;
+    if (!input) return message.reply(frame("Oui ? 😏"));
 
     const uid = event.senderID;
     let mem = getMem(uid);
 
-    mem.messages++;
+    mem.lastSeen = Date.now();
 
-    // 🎭 mood system
-    if (input.includes("blague")) mem.mood = "funny";
-    else if (input.includes("triste")) mem.mood = "calm";
-    else if (input.includes("merci")) mem.mood = "happy";
-    else mem.mood = "normal";
-
-    // 🧠 name memory
-    if (input.toLowerCase().startsWith("je m'appelle")) {
-      mem.name = input.replace(/je m'appelle/i, "").trim();
-    }
-
-    // 🧠 history
-    mem.history.push({
-      text: input,
-      time: getTime()
-    });
-
-    if (mem.history.length > 20) mem.history.shift();
+    // 🧠 MEMORY 7 JOURS
+    const now = Date.now();
+    mem.history.push({ text: input, time: now });
+    mem.history = mem.history.filter(h => now - h.time <= SEVEN_DAYS);
+    if (mem.history.length > 60) mem.history.shift();
 
     setMem(uid, mem);
 
     api.setMessageReaction("🌸", event.messageID, () => {}, true);
 
     try {
-      // 🎨 IMAGINE MODE
-      if (input.toLowerCase().startsWith("imagine ")) {
-        const prompt = input.slice(8);
+
+      // 🎨 IMAGE
+      if (lower.startsWith("neo imagine ")) {
+        const prompt = input.replace(/^imagine\s*/i, "").trim();
+
+        if (!prompt) return message.reply(frame("❌ prompt vide"));
 
         return message.reply({
           body: frame("🎨 " + prompt),
-          attachment: await getStream(imagine(prompt))
+          attachment: await axios.get(imagine(prompt), {
+            responseType: "stream"
+          }).then(r => r.data)
         });
       }
 
-      const reply = await askAI(input, mem.mood, mem.name, uid);
-      const clean = cleanText(reply);
+      // 🔊 VOICE
+      if (lower.startsWith("neo voix ") || lower.startsWith("neo voice ")) {
+        const text = input.replace(/^(voix|voice)/i, "").trim();
 
-      const moodText = {
-        funny: "😂 humeur : drôle",
-        calm: "😌 humeur : calme",
-        happy: "😊 humeur : heureux",
-        normal: "🌸 humeur : normale"
-      };
+        const reply = await askAI(text, mem, uid);
+        const audio = await toVoice(reply);
 
-      return message.reply(
-        frame(
-          `${moodText[mem.mood] || "🌸 humeur inconnue"}\n\n${clean}`
-        )
-      );
+        if (!audio) {
+          return message.reply(frame(reply + "\n\n❌ voix indisponible"));
+        }
 
-    } catch (e) {
-      return message.reply(frame("❌ erreur légère mais NEO reste active 🌸"));
+        return message.reply({
+          body: frame("🔊 NEO vocal"),
+          attachment: audio
+        });
+      }
+
+      // 🤖 TEXT
+      const reply = await askAI(input, mem, uid);
+
+      return message.reply(frame(reply));
+
+    } catch {
+      return message.reply(frame("❌ erreur mais NEO reste actif 🌸"));
     }
   }
 };

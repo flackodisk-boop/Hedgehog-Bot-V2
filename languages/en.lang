@@ -35,7 +35,6 @@ Seul l’administrateur du bot peut utiliser cette commande.
 
 🌸 ══━━✥👑✥━━══ 🌸`,
 
-    // 🔥 FIX IMPORTANT (alias manquant évite erreurs)
     onlyAdminBot2:
 `🌸 ══━━✥👑✥━━══ 🌸
 ⛔ ACCÈS BOT
